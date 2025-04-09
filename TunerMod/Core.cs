@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using HarmonyLib;
 using Il2CppScheduleOne.Vehicles;
 using Il2CppSystem.Reflection;
+using Il2CppScheduleOne.Map;
 
 [assembly: MelonInfo(typeof(TunerMod.Core), "TunerMod", "1.0.0", "RedReflex", null)]
 [assembly: MelonGame("TVGS", "Schedule I")]
@@ -34,6 +35,11 @@ namespace TunerMod
             {
                 MelonLogger.Msg("PRE Awake method called!");
                 MelonLogger.Msg("Current Vehicle: " + __instance.name);
+                if(__instance.transform.FindChild("OwnedVehiclePoI").GetComponent<POI>().enabled)
+                {
+                    GameObject spoilerSocket = CreateSpoilerSocket(__instance.name, __instance.transform.parent);
+                    AddSpoilerToVehicle(spoilerSocket);
+                }
             }
             
             private static void Postfix(LandVehicle __instance)
@@ -83,12 +89,12 @@ namespace TunerMod
             Quaternion rotation;
 
 
-            if (vehicleName == "Coupe")
+            if (vehicleName == "Coupe(Clone)")
             {
                 position = new Vector3(-3.35f, 0f, 0.35f);
                 rotation = Quaternion.Euler(0, 90, 90);
             }
-            else if (vehicleName == "Sedan")
+            else if (vehicleName == "Sedan(Clone)")
             {
                 position = new Vector3(-0f, 2.2f, 0.425f);
                 rotation = Quaternion.Euler(90, 0, 0);
