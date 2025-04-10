@@ -28,24 +28,23 @@ namespace TunerMod
         public static string currentVehicle = coupePath;
         public static Il2CppAssetBundle loadedSpoilerBundle;
 
-        [HarmonyPatch(typeof(LandVehicle), "Awake")]
+        [HarmonyPatch(typeof(LandVehicle), "SetIsPlayerOwned")]
         private class Patch
         {
             private static void Prefix(LandVehicle __instance)
             {
-                MelonLogger.Msg("PRE Awake method called!");
-                MelonLogger.Msg("Current Vehicle: " + __instance.name);
-                if(__instance.transform.FindChild("OwnedVehiclePoI").GetComponent<POI>().enabled)
-                {
-                    GameObject spoilerSocket = CreateSpoilerSocket(__instance.name, __instance.transform.parent);
-                    AddSpoilerToVehicle(spoilerSocket);
-                }
             }
             
             private static void Postfix(LandVehicle __instance)
             {
                 MelonLogger.Msg("POST Awake method called!");
                 MelonLogger.Msg("Current Vehicle: " + __instance.name);
+                MelonLogger.Msg("IsPlayerOwned: " + __instance.IsPlayerOwned);
+                if (__instance.IsPlayerOwned)
+                {
+                    GameObject spoilerSocket = CreateSpoilerSocket(__instance.name, __instance.vehicleModel);
+                    AddSpoilerToVehicle(spoilerSocket);
+                }
             }
         }
 
